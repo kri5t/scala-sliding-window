@@ -28,8 +28,19 @@ object Main {
     printFormatted(startTime, value, n, toFiveDecimals(rs), minV,maxV)
   }
 
-  def main(args: Array[String]): Unit = {
+  def analyzeLines(linesIterator: Iterator[String], slidingWindow: Int) = {
     printFormatted("T", "V", "N", "Rs", "MinV", "MaxV")
+
+    linesIterator
+      .map(x => x.trim.split("\\s+"))
+      .map(e => (e(0).toInt,e(1).toDouble))
+      .sliding(20, 1)
+      .foreach(x => analyzeSequence(x, slidingWindow))
+  }
+
+  def main(args: Array[String]): Unit = {
+    val linesIterator = Source.fromFile("./data_scala.txt")
+      .getLines
 
     var slidingWindow = 60
     if(args.length == 1) try{
@@ -38,11 +49,6 @@ object Main {
       case _: Throwable =>
     }
 
-    Source.fromFile("./data_scala.txt")
-      .getLines
-      .map(x => x.trim.split("\\s+"))
-      .map(e => (e(0).toInt,e(1).toDouble))
-      .sliding(20, 1)
-      .foreach(x => analyzeSequence(x, slidingWindow))
+    analyzeLines(linesIterator, slidingWindow)
   }
 }
