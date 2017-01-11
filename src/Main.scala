@@ -52,6 +52,7 @@ object Main {
 
     linesIterator
       .map(x => x.trim.split("\\s+"))
+      .filter(x => x.length == 2)
       .map(tryParseValues)
       .filter(x => x != null)
       .sliding(20, 1)
